@@ -8,5 +8,6 @@ python3 -m spacy download en_core_web_sm
 python3 -m nltk.downloader words
 python3 download_stopwords.py
 cp resume_parser.py venv/lib/python3.6/site-packages/pyresparser/
+cp utils.py venv/lib/python3.6/site-packages/pyresparser/
 export FLASK_RUN_PORT=8080
 flask run --host=0.0.0.0
