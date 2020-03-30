@@ -391,14 +391,22 @@ def extract_skills(nlp_text, noun_chunks, skills_file=None):
     :return: list of skills extracted
     '''
     tokens = [token.text for token in nlp_text if not token.is_stop]
+
+    data = pd.read_csv(
+        os.path.join(os.path.dirname(__file__), 'skills.csv')
+    )
+    skills = list(data.columns.values)
+
     if not skills_file:
-        data = pd.read_csv(
-            os.path.join(os.path.dirname(__file__), 'skills.csv')
-        )
+        pass
+
+    elif type(skills_file) == list:
+        skills = skills_file + skills
+
     else:
         data = pd.read_csv(skills_file)
+        skills = list(data.columns.values)
 
-    skills = list(data.columns.values)
     skills = [x.lower() for x in skills]
     skillset = []
     # check for one-grams
