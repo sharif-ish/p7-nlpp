@@ -1,9 +1,9 @@
 from flask import Flask, request, jsonify
 from pyresparser import ResumeParser
-
+from config import METHOD, HOST, PORT
 app = Flask(__name__)
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods= METHOD)
 def JDParser():
     req_json = request.json
     job_desc = req_json['desc']
@@ -11,4 +11,4 @@ def JDParser():
     return jsonify({'Skills': extracted_info['skills']})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host=HOST, port=PORT)
