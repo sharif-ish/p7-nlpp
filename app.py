@@ -10,7 +10,7 @@ def JDParser():
     req_json = request.json
     job_desc = req_json['desc']
     extracted_info = ResumeParser(job_desc, skills_file=custom_skills).get_extracted_data()
-    return jsonify({'Skills': extracted_info['skills']})
+    return jsonify({'extracted_info': extracted_info})
 
 if __name__ == '__main__':
     app.run(host=HOST, port=PORT)
