@@ -1,9 +1,8 @@
 import requests
+from config import SKILL_LIST_API, SKILL_LIST_API_KEY
 
-URL = 'http://p7.ishraak.com/api/skill_list/'
-API_KEY = '96d56aceeb9049debeab628ac760aa11'
-HEADER = {'api-key': API_KEY}
-response = requests.get(URL, headers=HEADER)
+HEADER = {'api-key': SKILL_LIST_API_KEY}
+response = requests.get(SKILL_LIST_API, headers=HEADER)
 skills = response.json()
 
 custom_skills = []
