@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title> Skill Extractor</title>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+            .purple-border textarea {
+            border: 1px solid #ba68c8;
+        }
+        .purple-border .form-control:focus {
+            border: 1px solid #ba68c8;
+            box-shadow: 0 0 0 0.2rem rgba(186, 104, 200, .25);
+        }
+    </style>
+</head>
+
+<body>
+ <div class="job_desc_form form-group purple-border">
+    <form action="{{ url_for('extract')}}"method="post">
+    	<textarea name="desc" class="form-control" id="exampleFormControlTextarea4" rows="3"></textarea>
+        <button type="submit" class="submit_btn">Extract</button>
+    </form>
+   <br>
+   <br>
+   {{ skills }}
+ </div>
+</body>
+</html>
