@@ -1,2 +1,11 @@
-input_skill = ['ajax','bash','bootstrap','c#','cakephp','chai','django rest framework','drupal','express','figma','git','jest','joomla','jquery','jquery','jqueryreact','js','les','less','mongodb','postgresql','rdbms','react native','sass','script','sql server','tdd','zend','adobe xd','angular','angular js','api integration','backend developer','codeigniter','css','css3','firebase','flutter','google sheet','ios', 'java','laravel','magento','material design','microsoft be','microsoft home','microsoft onedrive','mocha','mongo db','mssql','mvc','nodejs','react js','requests','sass','vue','vue router','vuex', 'webpack']
-custom_skills = list(set(input_skill))
+import requests
+
+URL = 'http://p7.ishraak.com/api/skill_list/'
+API_KEY = '96d56aceeb9049debeab628ac760aa11'
+HEADER = {'api-key': API_KEY}
+response = requests.get(URL, headers=HEADER)
+skills = response.json()
+
+custom_skills = []
+for skill in skills:
+    custom_skills.append(skill['name'])
