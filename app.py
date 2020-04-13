@@ -19,7 +19,6 @@ def home():
 @app.route('/ui', methods= METHOD)
 def extract():
     job_desc = request.form['desc']
-    print(job_desc)
     extracted_info = ResumeParser(job_desc, skills_file=custom_skills).get_extracted_data()
     extracted_skill = extracted_info['skills']
     return render_template('index.html', skills = extracted_skill)

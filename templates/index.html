@@ -3,23 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title> Skill Extractor</title>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+      <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <style>
-            .purple-border textarea {
-            border: 1px solid #ba68c8;
-        }
-        .purple-border .form-control:focus {
-            border: 1px solid #ba68c8;
-            box-shadow: 0 0 0 0.2rem rgba(186, 104, 200, .25);
-        }
+          html, body {
+                margin-top: 10px;
+            }
+          #Textarea{
+            height:300px;
+          }
     </style>
 </head>
 
 <body>
- <div class="job_desc_form form-group purple-border">
+ <div class="job_desc_form col-md-6 form-group purple-border container">
     <form action="{{ url_for('extract')}}"method="post">
-    	<textarea name="desc" class="form-control" id="exampleFormControlTextarea4" rows="3"></textarea>
-        <button type="submit" class="submit_btn">Extract</button>
+    	<textarea name="desc" class="form-control" id="Textarea" rows="3"></textarea>
+        <button type="submit" class="btn btn-primary">Extract</button>
     </form>
    <br>
    <br>
