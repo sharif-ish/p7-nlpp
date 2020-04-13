@@ -392,20 +392,17 @@ def extract_skills(nlp_text, noun_chunks, skills_file=None):
     '''
     tokens = [token.text for token in nlp_text if not token.is_stop]
 
-    data = pd.read_csv(
-        os.path.join(os.path.dirname(__file__), 'skills.csv')
-    )
-    skills = list(data.columns.values)
-
-    if not skills_file:
-        pass
-
-    elif type(skills_file) == list:
-        skills = skills_file + skills
+    if skills_file:
+        skills = skills_file
 
     else:
-        data = pd.read_csv(skills_file)
+        print("Add some skills")
+        '''
+        data = pd.read_csv(
+            os.path.join(os.path.dirname(__file__), 'skills.csv')
+        )
         skills = list(data.columns.values)
+        '''
 
     skills = [x.lower() for x in skills]
     skillset = []
