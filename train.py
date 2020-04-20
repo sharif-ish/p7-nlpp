@@ -7,12 +7,41 @@ import spacy
 from tqdm import tqdm
 
 # new entity label
-LABEL = 'JOB TITLE'
+LABEL = ['JOB TITLE', 'SKILL', 'VACANCY']
 
-TRAIN_DATA = [
-    ("Title: Senior iOS Developer Vacancy: 01 Job Context:", {
-        'entities': [(6, 27, 'JOB TITLE')]
-    }),
+train_data = [
+    ("Hiring Senior Full Stack Developer",{'entities':[ (7, 34, 'JOB TITLE') ]}),
+    ("Company: Studio Seventy1", {'entities':[ ]}),
+    ("Company website: https://seventy1.studio/", {'entities':[ ]}),
+    ("Starting Salary: 80,000 - 150,000  BDT", {'entities':[ ]}),
+    ("Salary review: Every 6 months.", {'entities':[ ]}),
+    ("Vacancy: 1",{'entities':[ (9, 10, 'VACANCY') ]}),
+    ("Job Type: Full-Time (Remote)", {'entities':[ ]}),
+    ("Deadline: 25 April", {'entities':[ ]}),
+    ("Working Hours: 7.5 hours per day, 5 days per week.", {'entities':[ ]}),
+    ("Must have:", {'entities':[ ]}),
+    ("3+ years of solid experience in Web Development", {'entities':[ ]}),
+    ("Extensive experience with JavaScript",{'entities':[ (26, 36, 'SKILL') ]}),
+    ("Very comfortable working with React/redux or Vue/Vuex",{'entities':[ (30, 35, 'SKILL'), (36, 41, 'SKILL'), (45, 48, 'SKILL'), (49, 53, 'SKILL') ]}),
+    ("Experience working with NodeJs, PHP",{'entities':[ (24, 30, 'SKILL'), (32, 35, 'SKILL') ]}),
+    ("Experience working with FireBase/MongoDB, MySQL",{'entities':[ (24, 32, 'SKILL'), (33, 40, 'SKILL'), (42, 47, 'SKILL') ]}),
+    ("Nice to have:", {'entities':[ ]}),
+    ("Experience with AWS",{'entities':[ (16, 19, 'SKILL') ]}),
+    ("Unit testing / TDD",{'entities':[ (0, 12, 'SKILL'), (14, 18, 'SKILL') ]}),
+    ("WordPress plugin development",{'entities':[ (0, 28, 'SKILL') ]}),
+    ("Responsibilities:", {'entities':[ ]}),
+    ("Build & design JavaScript & PHP Web Apps",{'entities':[ (15, 25, 'SKILL'), (28, 31, 'SKILL') ]}),
+    ("Maintain and support existing Web Apps", {'entities':[ ]}),
+    ("Follow best practices & ship code to production everyday", {'entities':[ ]}),
+    ("Benefits:", {'entities':[ ]}),
+    ("Opportunity to work for foreign clients", {'entities':[ ]}),
+    ("Great opportunity for career progress", {'entities':[ ]}),
+    ("Weekly two days off", {'entities':[ ]}),
+    ("Application Procedure:", {'entities':[ ]}),
+    ("Please send CV to contact@seventy1.studio with the subject “Senior  Full Stack Developer”", {'entities':[ ]}),
+    ("If you have any questions, comment below. We will answer shortly.", {'entities':[ ]}),
+    ("PS: Please share the message and help others to know this opportunity.", {'entities':[ ]}),
+    ("Title: Senior iOS Developer Vacancy: 01 Job Context:", {'entities':[(6, 27, 'JOB TITLE')]}),
 
     ("Hiring Senior Full Stack Developer Company: Studio Seventy1 Company website: https://seventy1.studio/ Starting Salary: 80,000 - 150,000  BDT Salary review: Every 6 months.", {
         'entities': [(7, 34, 'JOB TITLE')]
@@ -53,7 +82,7 @@ TRAIN_DATA = [
     n_iter=("Number of training iterations", "option", "n", int))
 
 
-def main(model=None, new_model_name='animal', output_dir='trained model/', n_iter=100):
+def main(model=None, new_model_name='CUSTOM MODEL', output_dir='trained model/', n_iter=1000):
     """Set up the pipeline and entity recognizer, and train the new entity."""
     if model is not None:
         nlp = spacy.load(model)  # load existing spaCy model
@@ -70,7 +99,9 @@ def main(model=None, new_model_name='animal', output_dir='trained model/', n_ite
     else:
         ner = nlp.get_pipe('ner')
 
-    ner.add_label(LABEL)   # add new entity label to entity recognizer
+    for l in LABEL:
+        ner.add_label(l)   # add new entity label to entity recognizer
+
     if model is None:
         optimizer = nlp.begin_training()
     else:
@@ -82,21 +113,21 @@ def main(model=None, new_model_name='animal', output_dir='trained model/', n_ite
     other_pipes = [pipe for pipe in nlp.pipe_names if pipe != 'ner']
     with nlp.disable_pipes(*other_pipes):  # only train NER
         for itn in range(n_iter):
-            random.shuffle(TRAIN_DATA)
+            random.shuffle(train_data)
             losses = {}
-            for text, annotations in tqdm(TRAIN_DATA):
+            for text, annotations in tqdm(train_data):
                 nlp.update([text], [annotations], sgd=optimizer, drop=0.35,
                            losses=losses)
             print(losses)
 
     # test the trained model
+    '''
     test_text = 'We (Softwind Tech) are LOOKING for experienced Game Developer'
-
     doc = nlp(test_text)
     print("Entities in '%s'" % test_text)
     for ent in doc.ents:
         print(ent.label_, ent.text)
-
+    '''
     # save model to output directory
     if output_dir is not None:
         output_dir = Path(output_dir)
