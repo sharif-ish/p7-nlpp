@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-filename = '2020-04-21 18:04:46 model history.txt'
+filename = '2020-04-21 20:12:42 model history.txt'
 
 data = eval(open(f'trained model/{filename}', 'r').read())
 
