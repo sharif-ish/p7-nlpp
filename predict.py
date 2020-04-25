@@ -3,38 +3,27 @@ import spacy
 
 test_text = '''
 
-Mobile TopUp Limited is backed by a Singapore VC and software company specialized in fintech, blockchain and cross border money transfer.
-Key expertise in the mobile wallet and international cross border payment.
-Position: Backend software engineer
-------
-Key responsibilities:
-Requirement analysis
-System design
-Documentation
-Development
-Client meeting (English)
--------
-We expect you have:
-Solid knowledge of Laravel, PHP
-Node, Javascript, React
-AWS, RDS, Load balancer, etc
-Git, Jira, etc
--------
-Office: Mirpur DOHS
-Work from home: Yes (Until further notice)
--------
-Salary range: 50K-80k
-Joining: As soon as possible
--------
-Office facility:
-Decorated Office
-Mac book
-5 days office
-Office lunch
-Tea-Coffe-Snacks
+Circle FinTech Ltd is looking for Software Engineer (Backend) with a minimum of 2 years experience in Python, Django and Node.js
 
-Apply here
-https://forms.gle/Q14FX5MMgstqZDbp6
+Company Type: FinTech
+
+Office Hours: 9:00 AM – 6:00 PM (Sun-Thursday)
+
+Office Location: Nasir Trade Center, 89 Bir Uttam CR Datta Road Bangla Motor, Dhaka
+
+Job Category: Developer
+
+Job Type: Full Time
+
+Experience Requirements: Minimum 2 years
+
+Salary Range: BDT 30,000 – 45,000 (Based on experience and skill)
+
+Deadline: 30th April 2020
+
+To know more details about the position and apply process please click the link below
+
+bit.ly/SEBE020420
 
 '''
 load_model = 'trained model/'
