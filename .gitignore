@@ -3,3 +3,4 @@ venv/
 data/
 skill file.csv
 templates/test.html
+code_test.py
