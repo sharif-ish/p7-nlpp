@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify, render_template
 from pyresparser import ResumeParser
 from config import METHOD, HOST, PORT
-from skills import custom_skills
-from function_file import job_desc_extractor
+from from_external_api import custom_skills
+from functions import job_desc_extractor
 app = Flask(__name__)
 
 @app.route('/')

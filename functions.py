@@ -3,6 +3,7 @@ import re
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem import PorterStemmer
+from from_external_api import custom_skills
 porterStemmer = PorterStemmer()
 tokenizer = RegexpTokenizer(r'\w+')
 
@@ -53,15 +54,15 @@ def company_name_extract(text):
             word_list = [' '.join(w) for w in lst]  # converting the list of tuples to string
             lkt.append(word_list)
     flat_list = [i for item in lkt for i in item]  # Converting the lists of list to a list
-    company_listt = set()
-    company_file = open("company.txt", encoding="utf-8").read()
-    company_list = company_file.split(",")
-    len(company_list)
+    company_list = set()
+    company_file = open("data/company_name.txt", encoding="utf-8").read()
+    company_list_from_api = [i.lower() for i in eval(company_file)]
     for f in flat_list:
-        if f.lower() in company_list:
-            company_listt.add(f.lower())
-            return company_listt
-#Function to extract the Company name
+        if f.lower() in company_list_from_api:
+            company_list.add(f.lower())
+            return company_list
+
+#Function to extract the salary
 def salary_extract(text):
     pattern=re.compile(r'\b(?:Sa|Co)\w* ?[A-Za-z]* ?:? ?[A-Za-z]*.? ?\b(?:\d+[A-Za-z]*,?\d* ?-? ?[A-Za-z]* ?\d+[A-Za-z]*,?\d*|Ne\w*)')
     match=re.findall(pattern,text)
@@ -71,6 +72,7 @@ def email_extract(text):
     pattern=re.compile(r'\S+@\S+')
     match=re.findall(pattern,text)
     return match
+
 #Function to extract the Company location
 def location_extract(text):
     flat_list=data_preprocess(text)
@@ -84,16 +86,19 @@ def location_extract(text):
         if f.lower() in fillle:
             loc.add(f)
     return loc
-#Function to extract the skill
+
+
+# Function to extract the skill
 def skill_extract(text):
-    flat_list=data_preprocess(text)
-    skill_listt=set()
-    skill_file=open("skill.txt").read()
-    skill_list=skill_file.split(",")
+    flat_list = data_preprocess(text)
+    skill_list = set()
+    cleaned_skills = []
+    for skill in custom_skills:
+        cleaned_skills.append(skill.strip().lower().replace('.', ''))
     for f in flat_list:
-        if f.lower().replace(' ','') in skill_list:
-            skill_listt.add(f.lower())
-    return skill_listt
+        if f.lower() in cleaned_skills:
+            skill_list.add(f.lower())
+    return skill_list
 
 # Function to extract the qualification
 def extract_qualification(text):
@@ -131,9 +136,9 @@ def extract_experience(text):
         return experience[0]
     else:
         return experience
+
 #Summary function( returning all data)
 def job_desc_extractor(text):
-    data=dict()
     data={"Title":title_extract(text),
          "Company Name":company_name_extract(text),
          "Salary":salary_extract(text),

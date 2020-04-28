@@ -3,7 +3,7 @@ import spacy
 
 test_text = '''
 
-Circle FinTech Ltd is looking for Software Engineer (Backend) with a minimum of 2 years experience in Python, Django and Node.js
+3DEVs IT Ltd. is looking for Software Engineer (Backend) with a minimum of 2 years experience in Python, Django and Node.js
 
 Company Type: FinTech
 
