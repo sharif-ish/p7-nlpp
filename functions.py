@@ -55,8 +55,8 @@ def company_name_extract(text):
             lkt.append(word_list)
     flat_list = [i for item in lkt for i in item]  # Converting the lists of list to a list
     company_list = set()
-    company_file = open("data/company_name.txt", encoding="utf-8").read()
-    company_list_from_api = [i.lower() for i in eval(company_file)]
+    company_file = open("company_name.txt", encoding="utf-8").read()
+    company_list_from_api = [i.strip().lower().replace('.','').replace(' ','') for i in eval(company_file)]
     for f in flat_list:
         if f.lower() in company_list_from_api:
             company_list.add(f.lower())
