@@ -1,7 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from pyresparser import ResumeParser
 from config import METHOD, HOST, PORT
-from from_external_api import custom_skills
 from functions import job_desc_extractor
 app = Flask(__name__)
 
@@ -11,7 +9,7 @@ def home():
 
 @app.route('/api', methods= METHOD)
 def JDParser():
-    extracted_info = ResumeParser(request.json['desc'], skills_file=custom_skills).get_extracted_data()
+    extracted_info = job_desc_extractor(request.form['desc'])
     return jsonify({'all': extracted_info})
 
 @app.route('/extract')
