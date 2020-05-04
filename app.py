@@ -1,34 +1,41 @@
-from flask import Flask, request, jsonify, render_template
-from config import METHOD, HOST, PORT
+from flask import Flask,render_template,request,jsonify
 from functions import job_desc_extractor
-app = Flask(__name__)
+from config import HOST,METHOD,PORT
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+
+app=Flask(__name__)
+
+
+
+@app.route("/")
+def before():
+    return render_template("extract.html")
+
+@app.route("/",methods=METHOD)
+def after_extract():
+    extracted_data=job_desc_extractor(request.form['desc'])
+
+    return render_template("extract.html",
+                           CompanyName=extracted_data['company'],
+                           Title=extracted_data['title'],
+                           Email=extracted_data['email'],
+                           Urls=extracted_data['url'],
+                           Salary=extracted_data['salary'],
+                           Currency=extracted_data['currency'],
+                           Vacancy=extracted_data['vacancy'],
+                           Skills=extracted_data['skills'],
+                           Experience=extracted_data['experience'],
+                           Deadline=extracted_data['deadline'],
+                           Location=extracted_data['location'],
+                           Qualification=extracted_data['qualification'],
+                           JobNature=extracted_data['job_nature'])
+
 
 @app.route('/api', methods= METHOD)
-def JDParser():
-    extracted_info = job_desc_extractor(request.form['desc'])
-    return jsonify({'all': extracted_info})
+def JDParser_api():
+    extracted_info = job_desc_extractor(request.json['desc'])
+    return jsonify({'extracted info': extracted_info})
 
-@app.route('/extract')
-def before_extract():
-    return render_template('extract.html')
 
-@app.route('/extract', methods= METHOD)
-def after_extract():
-    extracted_info = job_desc_extractor(request.form['desc'])
-    return render_template('extract.html',
-                           title =extracted_info['Title'],
-                           salary=extracted_info['Salary'],
-                           email=extracted_info['Email'],
-                           location=extracted_info['Location'],
-                           skills=extracted_info['Skills'],
-                           company_names=extracted_info['Company Name'],
-                           qualification=extracted_info['Qualification'],
-                           experience=extracted_info['Experience']
-                           )
-
-if __name__ == '__main__':
+if  (__name__)=="__main__":
     app.run(host=HOST, port=PORT)
