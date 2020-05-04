@@ -10,10 +10,9 @@ def extract_company(text):
     company_file = open("company_name.txt", encoding="utf-8").read()
     company_list = eval(company_file)
     company_list = [i.lower() for i in company_list]
-
     complst=[]
     for company in company_list:
-        if len(company)>0 and company in text.lower():
+        if ' '+company+' ' in ' '+text.lower()+' ':
             complst.append(company.title())
     return complst
 

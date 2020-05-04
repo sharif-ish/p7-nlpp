@@ -1,5 +1,5 @@
 import requests
-from config import SKILL_LIST_API, API_KEY, COMPANY_API
+from config import SKILL_LIST_API, API_KEY
 import time
 
 HEADER = {'api-key': API_KEY}
@@ -14,6 +14,7 @@ def api_response_to_list(url, key):
 
 # Get skills from API
 custom_skills = api_response_to_list(SKILL_LIST_API, 'name')
+'''
 
 # Company API
 start = time.time()
@@ -35,3 +36,6 @@ try:
     print(f"Data save to {filename}")
 except Exception as e:
     print(e)
+
+
+'''
