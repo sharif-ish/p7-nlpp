@@ -88,7 +88,7 @@ def extract_url(text):
 
 #Function to extract the vacancy
 def extract_vacancy(text):
-    pattern=re.compile(r'.*vacancy.*\n?.*',flags=re.I)
+    pattern=re.compile(r'.*vacanc.*\n?.*',flags=re.I)
     match=re.findall(pattern,text)
     sub_newline=re.sub(r'\\n',' ',str(match))
     vacancy=re.findall(r'\d+',str(sub_newline))
