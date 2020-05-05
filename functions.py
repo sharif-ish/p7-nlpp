@@ -65,11 +65,10 @@ def extract_salary(text):
     currency_file = open("currency.txt", encoding="utf-8").read()
     currency_list = eval(currency_file)
 
+    currency = []
     for cur in currency_list:
-        if ' '+cur.lower()+' ' in match.lower():
-            currency = cur
-        else:
-            currency = None
+        if ' '+cur.lower()+' ' in ' '+match.lower()+' ':
+            currency.append(cur)
 
     if len(salary) > 1:
         salary = {'minimum' : salary[0], 'maximum' : salary[1]}
