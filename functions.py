@@ -3,6 +3,20 @@ import datefinder
 import nltk
 from from_external_api import custom_skills
 from urlextract import URLExtract
+from difflib import SequenceMatcher
+from config import matching_ratio
+
+# Returns a list, containing longest matched substrings
+def longest_matched_substring(text, entity_list):
+    substrings = []
+    for entity in entity_list:
+        entity = entity.lower()
+        match = SequenceMatcher(None, text, entity).find_longest_match(0, len(text), 0, len(entity))
+        matched_substring = text[match.a: match.a + match.size]
+        ratio = SequenceMatcher(None, matched_substring, entity).ratio()
+        if ratio >= matching_ratio:
+            substrings.append(matched_substring)
+    return substrings
 
 #Function to remove extra words
 def remove_extra_word(text):
@@ -18,9 +32,9 @@ def remove_extra_word(text):
 
 #Function to extract Company Name
 def extract_company(text):
-    company_file=open('company_name.txt').readlines()
-    company_list=[comp.split(',') for comp in company_file]
-    company_list=[comp.strip() for company in company_list for comp in company]
+    company_file = open("company_name.txt", encoding="utf-8").read()
+    company_list = eval(company_file)
+    company_list = [i.lower() for i in company_list]
     text=text.replace('\n'," ").replace('.','').lower()
 
     complst=[]
@@ -81,7 +95,7 @@ def extract_currency(text):
 
 #Function to extract Email
 def extract_email(text):
-    pattern=re.compile(r'\S+@\S+')
+    pattern = re.compile(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+")
     match=re.findall(pattern,text)
     return match
 #Function to extract Urls
@@ -96,11 +110,12 @@ def extract_vacancy(text):
     vacancy=re.findall(r'\d+',str(sub_newline))
     return vacancy
 
+
 #Function for extracting skills
 def extract_skill(text):
     skill_list=[]
     for skill in custom_skills:
-        if skill in text.lower():
+        if skill.lower() in text.lower():
             skill_list.append(skill.title())
     return skill_list
 
@@ -142,7 +157,6 @@ def extract_location(text):
     for l in location_list:
         if l in text.lower():
             location.add(l.title())
-
     return list(location)
 
 # Function to extract the qualification
