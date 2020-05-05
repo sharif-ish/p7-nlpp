@@ -57,7 +57,6 @@ def extract_title(text):
 def extract_salary(text):
     pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
     match = re.findall(pattern, text)
-    print(match)
     match = re.sub(r"([,\\nr])", "", str(match))
     salary_pattern = re.compile(r'\d+\w?')
     salary = re.findall(salary_pattern, match)
@@ -70,10 +69,13 @@ def extract_salary(text):
         if ' '+cur.lower()+' ' in ' '+match.lower()+' ':
             currency.append(cur)
 
-    if len(salary) > 1:
+    if  len(salary) == 0:
+        salary = "Negotiable"
+    elif len(salary) > 1:
         salary = {'minimum' : salary[0], 'maximum' : salary[1]}
     else:
         salary =  salary
+
     return {'salary': salary, 'currency' : currency}
 
 
