@@ -95,7 +95,7 @@ def extract_currency(text):
 
 #Function to extract Email
 def extract_email(text):
-    pattern = re.compile(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+")
+    pattern = re.compile(r"[A-Za-z0-9\.\-+_]+@[A-Za-z0-9\.\-+_]+\.[A-Za-z]+")
     match=re.findall(pattern,text)
     return match
 #Function to extract Urls
