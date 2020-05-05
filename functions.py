@@ -67,10 +67,11 @@ def extract_salary(text):
             unit = re.sub('\d', '', salary[1])
         else:
             unit = ''
-        #return ("Minimum Salary:", salary[0] + unit, "Maximum Salary:", salary[1])
-        return ({"Minimum Salary": salary[0] + unit, "Maximum Salary": salary[1]})
+
+        return {"minimum": salary[0] + unit, "maximum": salary[1]}
+
     elif len(salary) == 1:
-        return ("Salary:", salary[0])
+        return {"salary:", salary[0]}
     else:
         return ("Negotiable")
 
