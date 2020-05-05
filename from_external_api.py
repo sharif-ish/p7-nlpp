@@ -14,6 +14,7 @@ def api_response_to_list(url, key):
 
 # Get skills from API
 custom_skills = api_response_to_list(SKILL_LIST_API, 'name')
+
 '''
 
 # Company API
