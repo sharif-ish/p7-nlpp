@@ -29,7 +29,7 @@ def extract_company(text):
             complst.append(company.title())
     return complst
 
-#Function to extract Salary
+
 def extract_title(text):
     title_file = open("title.txt")  # Title file
     title_list = [line.strip('\n').lower() for line in title_file.readlines()]
@@ -143,7 +143,7 @@ def extract_location(text):
         if l in text.lower():
             location.add(l.title())
 
-    return location
+    return list(location)
 
 # Function to extract the qualification
 def extract_qualification(text):
