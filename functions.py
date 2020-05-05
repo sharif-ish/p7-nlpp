@@ -43,7 +43,7 @@ def extract_company(text):
             complst.append(company.title())
     return complst
 
-#Function to extract Salary
+
 def extract_title(text):
     title_file = open("title.txt")  # Title file
     title_list = [line.strip('\n') for line in title_file.readlines()]
@@ -57,43 +57,26 @@ def extract_title(text):
 def extract_salary(text):
     pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
     match = re.findall(pattern, text)
-    sub_newline = re.sub(r'\\n', ' ', str(match))
-    sub_newline = re.sub(r',', '', sub_newline)
-    new_pattern = re.compile(r'\d+\w?')
-    salary = re.findall(new_pattern, sub_newline)
+    print(match)
+    match = re.sub(r"([,\\nr])", "", str(match))
+    salary_pattern = re.compile(r'\d+\w?')
+    salary = re.findall(salary_pattern, match)
 
-    if len(salary) > 1:
-        if len(re.sub('\d', '', salary[0])) == 0:
-            unit = re.sub('\d', '', salary[1])
-        else:
-            unit = ''
-
-        return {"minimum": salary[0] + unit, "maximum": salary[1]}
-
-    elif len(salary) == 1:
-        return {"salary:", salary[0]}
-    else:
-        return ("Negotiable")
-
-#Function to extract Currency
-def extract_currency(text):
-    pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
-    match = re.findall(pattern, text)
-    sub_newline = re.sub(r'\\n', ' ', str(match))
-    sub_newline = re.sub(r',', '', sub_newline)
-
-    currency = set()
-    currency_file = open("currency.txt").readlines()
-    currency_list = [line.split(',') for line in currency_file]
-    currency_list = [cur for currency in currency_list for cur in currency]
+    currency_file = open("currency.txt", encoding="utf-8").read()
+    currency_list = eval(currency_file)
 
     for cur in currency_list:
-        if cur in sub_newline:
-            currency.add(cur)
-    if len(currency) > 0:
-        return currency
+        if ' '+cur.lower()+' ' in match.lower():
+            currency = cur
+        else:
+            currency = None
+
+    if len(salary) > 1:
+        salary = {'minimum' : salary[0], 'maximum' : salary[1]}
     else:
-        return "BDT"
+        salary =  salary
+    return {'salary': salary, 'currency' : currency}
+
 
 #Function to extract Email
 def extract_email(text):
@@ -159,9 +142,7 @@ def extract_location(text):
     for l in location_list:
         if l in text.lower():
             location.add(l.title())
-
     return list(location)
-
 
 # Function to extract the qualification
 def extract_qualification(text):
@@ -206,8 +187,8 @@ def extract_job_nature(text):
 def job_desc_extractor(text):
     data={"company":extract_company(text),
         "title":extract_title(text),
-         "salary":extract_salary(text),
-          "currency":extract_currency(text),
+         "salary":extract_salary(text)['salary'],
+          "currency":extract_salary(text)['currency'],
           "email":extract_email(text),
           "url":extract_url(text),
           "vacancy":extract_vacancy(text),
