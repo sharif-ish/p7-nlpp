@@ -1,0 +1,6 @@
+datefinder==0.7.0
+Flask==1.1.2
+nltk==3.5
+requests==2.23.0
+urlextract==0.14.0
+
