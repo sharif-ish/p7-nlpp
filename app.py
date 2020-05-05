@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request
+from flask import Flask,render_template,request,jsonify
 from functions import job_desc_extractor
 from config import HOST,METHOD,PORT
 
@@ -30,6 +30,11 @@ def after_extract():
                            Qualification=extracted_data['qualification'],
                            JobNature=extracted_data['job_nature'])
 
+
+@app.route('/api', methods= METHOD)
+def JDParser_api():
+    extracted_info = job_desc_extractor(request.json['desc'])
+    return jsonify({'extracted info': extracted_info})
 
 if  (__name__)=="__main__":
     app.run(host=HOST, port=PORT)

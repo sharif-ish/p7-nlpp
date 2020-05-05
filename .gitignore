@@ -1,4 +1,8 @@
 __pycache__/
 venv/
 .idea/
+<<<<<<< HEAD
 test.py
+=======
+test.py
+>>>>>>> extract_job
