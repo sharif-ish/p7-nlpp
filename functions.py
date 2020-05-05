@@ -46,12 +46,12 @@ def extract_company(text):
 
 def extract_title(text):
     title_file = open("title.txt")  # Title file
-    title_list = [line.strip('\n').lower() for line in title_file.readlines()]
-
+    title_list = [line.strip('\n') for line in title_file.readlines()]
+    job_titles = []
     for title in title_list:
-        if title in text.lower():
-            return title.title()
-            break
+        if title.lower() in text.lower():
+            job_titles.append(title)
+    return job_titles
 
 #Function to extract Salary
 def extract_salary(text):
