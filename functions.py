@@ -1,6 +1,5 @@
 import re
 import datefinder
-import nltk
 from from_external_api import custom_skills
 from urlextract import URLExtract
 from difflib import SequenceMatcher
@@ -148,30 +147,24 @@ def extract_location(text):
 
 # Function to extract the qualification
 def extract_qualification(text):
-    pattern = re.compile(r'Education\w+ ?\w+.*\n?\S.*',flags=re.I)
-    match = re.findall(pattern, text)
-    sub_newline = re.sub(r'\\n', ' ', str(match))
-    sub_non_alphabet = re.sub('[^A-Za-z ]', "", str(sub_newline))
-    qulification_list = ['bsc', 'msc', 'masters', 'diploma', 'Polytechnic']
-    dept_name = ['cse', 'cis', 'csse', 'eee', 'computer application', 'computer', 'computer science']
-    word = nltk.word_tokenize(sub_non_alphabet)
-    qulification = []
-    dept = []
-    for w in word:
-        if w.lower() in qulification_list:
-            qulification.append(w)
-    for w in word:
-        if w.lower() in dept_name:
-            dept.append(w)
-    qulification = '/'.join(qulification)
-    dept = ' '.join(dept)
-    if len(qulification) == 0 and len(dept) == 0:
-        return "Not applicable"
-    elif len(qulification) == 0 and len(dept) > 0:
-        qulification = "BSC"
-        return qulification + " in " + dept
-    else:
-        return qulification + " in " + dept
+    text = re.sub('[.|\\n]', '', str(text))
+    text = re.sub(r'[^A-Za-z ]', ' ', text)
+    text = text.lower()
+
+    degree_list = ['Bachelor', 'Undergraduate', 'Graduate' 'BSC', 'MSC', 'Master', 'Diploma', 'Polytechnic']
+    major_list = ['CSE', 'CIS', 'CS', 'EEE', 'ETE', 'Computer', 'BBA']
+
+    degree = []
+    major = []
+    for deg in degree_list:
+        if ' '+deg.lower()+' ' in ' '+text+' ':
+            degree.append(deg)
+    for maj in major_list:
+        if ' '+maj.lower()+' ' in ' '+text+' ':
+            major.append(maj)
+
+    return {'degree':degree, 'major':major}
+
 
 #Function to extract the job nature
 def extract_job_nature(text):
