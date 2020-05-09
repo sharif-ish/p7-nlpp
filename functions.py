@@ -63,11 +63,12 @@ def extract_salary(text):
 
     currency_file = open("currency.txt", encoding="utf-8").read()
     currency_list = eval(currency_file)
-
-    currency = []
-    for cur in currency_list:
-        if ' '+cur.lower()+' ' in ' '+match.lower()+' ':
-            currency.append(cur)
+    # currency = []
+    # for cur in currency_list:
+    #     if ' '+cur.lower()+' ' in ' '+match.lower()+' ':
+    #         currency.append(cur)
+    pattern = re.compile(r"(?=(\b" + '\\b|\\b'.join(currency_list) + r"\b))", flags=re.I)
+    currency = re.findall(pattern, text)
 
     if  len(salary) == 0:
         salary = "Negotiable"
