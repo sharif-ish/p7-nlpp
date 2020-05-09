@@ -58,6 +58,7 @@ def extract_salary(text):
     pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
     match = re.findall(pattern, text)
     match = re.sub(r"([,\\nr])", "", str(match))
+
     salary_pattern = re.compile(r'\d+\w?')
     salary = re.findall(salary_pattern, match)
 
