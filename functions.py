@@ -68,10 +68,6 @@ def extract_salary(text):
 
     currency_file = open("currency.txt", encoding="utf-8").read()
     currency_list = eval(currency_file)
-    # currency = []
-    # for cur in currency_list:
-    #     if ' '+cur.lower()+' ' in ' '+match.lower()+' ':
-    #         currency.append(cur)
     pattern = re.compile(r"(?=(\b" + '\\b|\\b'.join(currency_list) + r"\b))", flags=re.I)
     currency = re.findall(pattern, match)
 
@@ -148,20 +144,6 @@ def extract_location(text):
     location = re.findall(pattern, text)
 
     return location
-
-
-
-# def extract_location(text):
-#     location = set()
-#
-#     location_file = open("location.txt").readlines()
-#     location_list = [line.split(',') for line in location_file]
-#     location_list=[l for loc in location_list for l in loc]
-#
-#     for l in location_list:
-#         if l in text.lower():
-#             location.add(l.title())
-#     return list(location)
 
 # Function to extract the qualification
 def extract_qualification(text):
