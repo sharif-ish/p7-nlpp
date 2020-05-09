@@ -6,6 +6,11 @@ from urlextract import URLExtract
 from difflib import SequenceMatcher
 from config import matching_ratio
 
+#Functions to remove punctuation
+def remove_punctuation(text):
+    return re.sub('[.)(]','',text)
+
+
 # Returns a list, containing longest matched substrings
 def longest_matched_substring(text, entity_list):
     substrings = []
@@ -49,7 +54,7 @@ def extract_title(text):
     title_list = [line.strip('\n') for line in title_file.readlines()]
     job_titles = []
     for title in title_list:
-        if title.lower() in text.lower():
+        if ' '+title.lower() in ' '+remove_punctuation(text.lower())+' ':
             job_titles.append(title)
     return job_titles
 
@@ -57,7 +62,7 @@ def extract_title(text):
 def extract_salary(text):
     pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
     match = re.findall(pattern, text)
-    match = re.sub(r"([,\\nr])", "", str(match))
+    match = re.sub(r"([,\\nr])", " ", str(match))
     salary_pattern = re.compile(r'\d+\w?')
     salary = re.findall(salary_pattern, match)
 
@@ -68,14 +73,14 @@ def extract_salary(text):
     #     if ' '+cur.lower()+' ' in ' '+match.lower()+' ':
     #         currency.append(cur)
     pattern = re.compile(r"(?=(\b" + '\\b|\\b'.join(currency_list) + r"\b))", flags=re.I)
-    currency = re.findall(pattern, text)
+    currency = re.findall(pattern, match)
 
     if  len(salary) == 0:
         salary = "Negotiable"
     elif len(salary) > 1:
         salary = {'minimum' : salary[0], 'maximum' : salary[1]}
     else:
-        salary =  salary
+        salary =salary
 
     return {'salary': salary, 'currency' : currency}
 
@@ -134,17 +139,29 @@ def extract_deadline(text):
     return deadline
 
 #Function to extract location
+
 def extract_location(text):
-    location = set()
+    location_file = open("location.txt", encoding="utf-8").read()
+    location_list = eval(location_file)
 
-    location_file = open("location.txt").readlines()
-    location_list = [line.split(',') for line in location_file]
-    location_list=[l for loc in location_list for l in loc]
+    pattern = re.compile(r"(?=(\b" + '\\b|\\b'.join(location_list) + r"\b))", flags=re.I)
+    location = re.findall(pattern, text)
 
-    for l in location_list:
-        if l in text.lower():
-            location.add(l.title())
-    return list(location)
+    return location
+
+
+
+# def extract_location(text):
+#     location = set()
+#
+#     location_file = open("location.txt").readlines()
+#     location_list = [line.split(',') for line in location_file]
+#     location_list=[l for loc in location_list for l in loc]
+#
+#     for l in location_list:
+#         if l in text.lower():
+#             location.add(l.title())
+#     return list(location)
 
 # Function to extract the qualification
 def extract_qualification(text):
