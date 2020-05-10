@@ -59,7 +59,6 @@ def extract_title(text):
     return job_titles
 
 #Function to extract Salary
-
 def extract_salary(text):
     pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
     match = re.findall(pattern, text)
@@ -136,7 +135,6 @@ def extract_deadline(text):
     return deadline
 
 #Function to extract location
-
 def extract_location(text):
     location_file = open("location.txt", encoding="utf-8").read()
     location_list = eval(location_file)
