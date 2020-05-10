@@ -151,7 +151,7 @@ def extract_location(text):
     pattern = re.compile(r"(?=(\b" + '\\b|\\b'.join(location_list) + r"\b))", flags=re.I)
     location = re.findall(pattern, text)
 
-    return location
+    return set(location)
 
 # Function to extract the qualification
 def extract_qualification(text):
