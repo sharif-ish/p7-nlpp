@@ -54,21 +54,9 @@ def extract_title(text):
     title_list = [line.strip('\n') for line in title_file.readlines()]
     job_titles = []
     for title in title_list:
-        if ' '+title.lower() in ' '+remove_punctuation(text.lower())+' ':
+        if title.lower() in text.lower():
             job_titles.append(title)
     return job_titles
-
-
-
-
-# def extract_title(text):
-#     title_file = open("title.txt")  # Title file
-#     title_list = [line.strip('\n') for line in title_file.readlines()]
-#     job_titles = []
-#     for title in title_list:
-#         if title.lower() in text.lower():
-#             job_titles.append(title)
-#     return job_titles
 
 
 
@@ -99,31 +87,6 @@ def extract_salary(text):
 
     return {'salary': salary, 'currency' : currency}
 
-
-# def extract_salary(text):
-#     pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
-#     match = re.findall(pattern, text)
-#     match = re.sub(r"([,\\nr])", "", str(match))
-#
-#     salary_pattern = re.compile(r'\d+\w?')
-#     salary = re.findall(salary_pattern, match)
-#
-#     currency_file = open("currency.txt", encoding="utf-8").read()
-#     currency_list = eval(currency_file)
-#
-#     currency = []
-#     for cur in currency_list:
-#         if ' '+cur.lower()+' ' in ' '+match.lower()+' ':
-#             currency.append(cur)
-#
-#     if  len(salary) == 0:
-#         salary = "Negotiable"
-#     elif len(salary) > 1:
-#         salary = {'minimum' : salary[0], 'maximum' : salary[1]}
-#     else:
-#         salary =  salary
-#
-#     return {'salary': salary, 'currency' : currency}
 
 #Function to extract Email
 def extract_email(text):
