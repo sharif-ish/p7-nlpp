@@ -7,7 +7,7 @@ from config import matching_ratio
 
 #Functions to remove punctuation
 def remove_punctuation(text):
-    return re.sub('[.)(]','',text)
+    return re.sub('[-)(]',' ',text)
 
 
 # Returns a list, containing longest matched substrings
