@@ -54,7 +54,7 @@ def extract_title(text):
     title_list = [line.strip('\n') for line in title_file.readlines()]
     job_titles = []
     for title in title_list:
-        if ' '+title.lower() in ' '+remove_punctuation(text.lower())+' ':
+        if title.lower() in text.lower():
             job_titles.append(title)
     return job_titles
 
@@ -84,8 +84,6 @@ def extract_salary(text):
         salary =  salary
 
     return {'salary': salary, 'currency' : currency}
-
-
 
 
 #Function to extract Email
