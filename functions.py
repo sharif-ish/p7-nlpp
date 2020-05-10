@@ -7,7 +7,7 @@ from config import matching_ratio
 
 #Functions to remove punctuation
 def remove_punctuation(text):
-    return re.sub('[.)(]','',text)
+    return re.sub('[-)(]',' ',text)
 
 
 # Returns a list, containing longest matched substrings
@@ -54,22 +54,16 @@ def extract_title(text):
     title_list = [line.strip('\n') for line in title_file.readlines()]
     job_titles = []
     for title in title_list:
-        if title.lower() in text.lower():
+        if ' '+title.lower() in ' '+remove_punctuation(text.lower())+' ':
             job_titles.append(title)
     return job_titles
 
-
-
-
-
-
 #Function to extract Salary
-
 def extract_salary(text):
     pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
     match = re.findall(pattern, text)
     match = re.sub(r"([,\nr])", "", str(match))
-    print(match)
+
     salary_pattern = re.compile(r'\d+\w?')
     salary = re.findall(salary_pattern, match)
 
@@ -86,7 +80,6 @@ def extract_salary(text):
         salary =salary
 
     return {'salary': salary, 'currency' : currency}
-
 
 #Function to extract Email
 def extract_email(text):
@@ -142,16 +135,14 @@ def extract_deadline(text):
     return deadline
 
 #Function to extract location
-
 def extract_location(text):
-    location=set()
     location_file = open("location.txt", encoding="utf-8").read()
     location_list = eval(location_file)
 
     pattern = re.compile(r"(?=(\b" + '\\b|\\b'.join(location_list) + r"\b))", flags=re.I)
     location = re.findall(pattern, text)
 
-    return location
+    return set(location)
 
 # Function to extract the qualification
 def extract_qualification(text):
@@ -159,7 +150,7 @@ def extract_qualification(text):
     text = re.sub(r'[^A-Za-z ]', ' ', text)
     text = text.lower()
 
-    degree_list = ['Bachelor', 'Undergraduate', 'Graduate' 'BSC', 'MSC', 'Master', 'Diploma', 'Polytechnic']
+    degree_list = ['Bachelor', 'Undergraduate', 'Graduate','BSC', 'MSC', 'Master', 'Diploma', 'Polytechnic']
     major_list = ['CSE', 'CIS', 'CS', 'EEE', 'ETE', 'Computer', 'BBA']
 
     degree = []
