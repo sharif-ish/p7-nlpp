@@ -1,10 +1,10 @@
 import re
 import datefinder
+import nltk
 from from_external_api import custom_skills
 from urlextract import URLExtract
 from difflib import SequenceMatcher
 from config import matching_ratio
-
 
 # Function to remove punctuation and convert to lower case
 def text_cleaner(text):
@@ -26,7 +26,6 @@ def pattern_matcher(text, pattern):
     compiled_pattern = re.compile(pattern, flags=re.I)
     match = re.findall(compiled_pattern, text)
     return match
-
 
 # Returns a list, containing longest matched substrings
 def longest_matched_substring(text, entity_list):
@@ -77,7 +76,6 @@ def extract_company(text):
         company_name = str(company)
     return company_name
 
-#Function to extract title
 
 def extract_title(text):
     title_file = open("title.txt")  # Title file
@@ -92,28 +90,45 @@ def extract_title(text):
 def extract_salary(text):
     pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
     match = re.findall(pattern, text)
-    match = re.sub(r"([,\nr])", "", str(match))
+    sub_newline = re.sub(r'\\n', ' ', str(match))
+    sub_newline = re.sub(r',', '', sub_newline)
+    new_pattern = re.compile(r'\d+\w?')
+    salary = re.findall(new_pattern, sub_newline)
 
-    salary_pattern = re.compile(r'\d+\w?')
-    salary = re.findall(salary_pattern, match)
-
-    currency_file = open("currency.txt", encoding="utf-8").read()
-    currency_list = eval(currency_file)
-    pattern = re.compile(r"(?=(\b" + '\\b|\\b'.join(currency_list) + r"\b))", flags=re.I)
-    currency = re.findall(pattern, match)
-
-    if  len(salary) == 0:
-        salary = "Negotiable"
-    elif len(salary) > 1:
-        salary = {'minimum' : salary[0], 'maximum' : salary[1]}
+    if len(salary) > 1:
+        if len(re.sub('\d', '', salary[0])) == 0:
+            unit = re.sub('\d', '', salary[1])
+        else:
+            unit = ''
+        return ("Minimum Salary:", salary[0] + unit, "Maximum Salary:", salary[1])
+    elif len(salary) == 1:
+        return ("Salary:", salary[0])
     else:
-        salary =salary
+        return ("Negotiable")
 
-    return {'salary': salary, 'currency' : currency}
+#Function to extract Currency
+def extract_currency(text):
+    pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
+    match = re.findall(pattern, text)
+    sub_newline = re.sub(r'\\n', ' ', str(match))
+    sub_newline = re.sub(r',', '', sub_newline)
+
+    currency = set()
+    currency_file = open("currency.txt").readlines()
+    currency_list = [line.split(',') for line in currency_file]
+    currency_list = [cur for currency in currency_list for cur in currency]
+
+    for cur in currency_list:
+        if cur in sub_newline:
+            currency.add(cur)
+    if len(currency) > 0:
+        return currency
+    else:
+        return "BDT"
 
 #Function to extract Email
 def extract_email(text):
-    pattern = re.compile(r"[A-Za-z0-9\.\-+_]+@[A-Za-z0-9\.\-+_]+\.[A-Za-z]+")
+    pattern = re.compile(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+")
     match=re.findall(pattern,text)
     return match
 #Function to extract Urls
@@ -166,34 +181,43 @@ def extract_deadline(text):
 
 #Function to extract location
 def extract_location(text):
-    location_file = open("location.txt", encoding="utf-8").read()
-    location_list = eval(location_file)
+    location = set()
 
-    pattern = re.compile(r"(?=(\b" + '\\b|\\b'.join(location_list) + r"\b))", flags=re.I)
-    location = re.findall(pattern, text)
+    location_file = open("location.txt").readlines()
+    location_list = [line.split(',') for line in location_file]
+    location_list=[l for loc in location_list for l in loc]
 
-    return set(location)
+    for l in location_list:
+        if l in text.lower():
+            location.add(l.title())
+    return list(location)
 
 # Function to extract the qualification
 def extract_qualification(text):
-    text = re.sub('[.|\\n]', '', str(text))
-    text = re.sub(r'[^A-Za-z ]', ' ', text)
-    text = text.lower()
-
-    degree_list = ['Bachelor', 'Undergraduate', 'Graduate','BSC', 'MSC', 'Master', 'Diploma', 'Polytechnic']
-    major_list = ['CSE', 'CIS', 'CS', 'EEE', 'ETE', 'Computer', 'BBA']
-
-    degree = []
-    major = []
-    for deg in degree_list:
-        if ' '+deg.lower()+' ' in ' '+text+' ':
-            degree.append(deg)
-    for maj in major_list:
-        if ' '+maj.lower()+' ' in ' '+text+' ':
-            major.append(maj)
-
-    return {'degree':degree, 'major':major}
-
+    pattern = re.compile(r'Education\w+ ?\w+.*\n?\S.*',flags=re.I)
+    match = re.findall(pattern, text)
+    sub_newline = re.sub(r'\\n', ' ', str(match))
+    sub_non_alphabet = re.sub('[^A-Za-z ]', "", str(sub_newline))
+    qulification_list = ['bsc', 'msc', 'masters', 'diploma', 'Polytechnic']
+    dept_name = ['cse', 'cis', 'csse', 'eee', 'computer application', 'computer', 'computer science']
+    word = nltk.word_tokenize(sub_non_alphabet)
+    qulification = []
+    dept = []
+    for w in word:
+        if w.lower() in qulification_list:
+            qulification.append(w)
+    for w in word:
+        if w.lower() in dept_name:
+            dept.append(w)
+    qulification = '/'.join(qulification)
+    dept = ' '.join(dept)
+    if len(qulification) == 0 and len(dept) == 0:
+        return "Not applicable"
+    elif len(qulification) == 0 and len(dept) > 0:
+        qulification = "BSC"
+        return qulification + " in " + dept
+    else:
+        return qulification + " in " + dept
 
 #Function to extract the job nature
 def extract_job_nature(text):
@@ -212,8 +236,8 @@ def job_desc_extractor(text):
     cleaned_text = text_cleaner(text)
     data={"company":extract_company(cleaned_text),
         "title":extract_title(text),
-         "salary":extract_salary(text)['salary'],
-          "currency":extract_salary(text)['currency'],
+         "salary":extract_salary(text),
+          "currency":extract_currency(text),
           "email":extract_email(text),
           "url":extract_url(text),
           "vacancy":extract_vacancy(text),
