@@ -5,10 +5,26 @@ from urlextract import URLExtract
 from difflib import SequenceMatcher
 from config import matching_ratio
 
-#Functions to remove punctuation
-def remove_punctuation(text):
-    return re.sub('[-)(]',' ',text)
+# Function to remove punctuation and convert to lower case
+def text_cleaner(text):
+    cleaned = re.sub('[-)(#$%*~:,?_+=@]',' ',text)
+    cleaned = cleaned.lower()
+    return cleaned
 
+# Function to remove punctuation and convert to lower case
+def entity_matcher(text, entity_list):
+    text = re.sub('[\n\r]',' ', str(text))
+    matched_entities = []
+    for entity in entity_list:
+        if ' '+entity.lower()+' ' in ' '+text+' ':
+            matched_entities.append(entity)
+    return matched_entities
+
+# Function to match pattern
+def pattern_matcher(text, pattern):
+    compiled_pattern = re.compile(pattern, flags=re.I)
+    match = re.findall(compiled_pattern, text)
+    return match
 
 # Returns a list, containing longest matched substrings
 def longest_matched_substring(text, entity_list):
@@ -22,33 +38,45 @@ def longest_matched_substring(text, entity_list):
             substrings.append(matched_substring)
     return substrings
 
-#Function to remove extra words
-def remove_extra_word(text):
-    if len(text.split())<3:
-        return text
+#Function to remove extra words in company name
+def extra_word_remover(company):
+    text_without_word = re.sub('[.]','',company).lower()
+    if len(text_without_word.split())<3:
+        return company
     else:
         rmlst=['ltd','limited','inc','pvt']
         for r in rmlst:
-            if ' '+r in text:
-                text=text.replace(' '+r,'')
-        return text
+            if ' '+r+' ' in ' '+text_without_word+' ':
+                text_without_word = text_without_word.replace(' '+r,'')
+        return text_without_word
 
+# Function to match company name
+def company_name_matcher(text, company_list):
+    text = re.sub('[\n\r]',' ', str(text))
+    complst = []
+
+    for c in company_list:
+        if ' '+c.lower()+' ' in ' '+text+' ':
+            complst.append(c)
+    return complst
 
 #Function to extract Company Name
 def extract_company(text):
     company_file = open("company_name.txt", encoding="utf-8").read()
-    company_list = eval(company_file)
-    company_list = [i.lower() for i in company_list]
-    text=text.replace('\n'," ").replace('.','').lower()
-
-    complst=[]
-    for company in company_list:
-        if ' ' + remove_extra_word(company.replace('.', '')) in ' '+text+ ' ':
-            complst.append(company.title())
-    return complst
+    company_list =eval(company_file)
+    complst = company_name_matcher(text, company_list)
+    if len(complst) == 1:
+        company_name = complst[0]
+    elif len(complst) == 0:
+        company_name = "Not Found"
+    else :
+        text = pattern_matcher(text, r'.*\b(?:company|looking for|is an|is a|is hiring).*\n?.*')
+        text = " ".join(text)
+        company = company_name_matcher(text, company_list)
+        company_name = str(company)
+    return company_name
 
 #Function to extract title
-
 def extract_title(text):
     title_file = open("title.txt")  # Title file
     title_list = [line.strip('\n') for line in title_file.readlines()]
@@ -186,7 +214,8 @@ def extract_job_nature(text):
 
 
 def job_desc_extractor(text):
-    data={"company":extract_company(text),
+    cleaned_text = text_cleaner(text)
+    data={"company":extract_company(cleaned_text),
         "title":extract_title(text),
          "salary":extract_salary(text)['salary'],
           "currency":extract_salary(text)['currency'],
