@@ -11,16 +11,24 @@ def text_cleaner(text):
     cleaned = cleaned.lower()
     return cleaned
 
+# Function to match pattern
+def pattern_matcher(text, pattern):
+    compiled_pattern = re.compile(pattern, flags=re.I)
+    match = re.findall(compiled_pattern, text)
+    return match
+
+# Function to search strings within text
+def string_searcher(text, string_list):
+    matched_strings = []
+    for string in string_list:
+        if ' '+string.lower()+' ' in ' '+text+' ':
+            matched_strings.append(string)
+    return matched_strings
+
 # Function to remove punctuation and convert to lower case
 def entity_matcher(text, entity_list, pattern):
     text = re.sub('[\n\r]',' ', str(text))
-    matched_entities = []
-    print(text)
-
-    for entity in entity_list:
-        if ' '+entity.lower()+' ' in ' '+text+' ':
-            matched_entities.append(entity)
-
+    matched_entities = string_searcher(text, entity_list)
     if len(matched_entities) == 1:
         matched_entity = matched_entities[0]
     elif len(matched_entities) == 0:
@@ -28,15 +36,9 @@ def entity_matcher(text, entity_list, pattern):
     else :
         text = pattern_matcher(text, pattern)
         text = " ".join(text)
-        ent = company_name_matcher(text, entity_list)
+        ent = string_searcher(text, entity_list)
         matched_entity = str(ent)
     return matched_entity
-
-# Function to match pattern
-def pattern_matcher(text, pattern):
-    compiled_pattern = re.compile(pattern, flags=re.I)
-    match = re.findall(compiled_pattern, text)
-    return match
 
 # Returns a list, containing longest matched substrings
 def longest_matched_substring(text, entity_list):
@@ -62,30 +64,12 @@ def extra_word_remover(company):
                 text_without_word = text_without_word.replace(' '+r,'')
         return text_without_word
 
-# Function to match company name
-def company_name_matcher(text, company_list):
-    text = re.sub('[\n\r]',' ', str(text))
-    complst = []
-
-    for c in company_list:
-        if ' '+c.lower()+' ' in ' '+text+' ':
-            complst.append(c)
-    return complst
-
 #Function to extract Company Name
 def extract_company(text):
-    company_file = open("company_name.txt", encoding="utf-8").read()
-    company_list =eval(company_file)
-    complst = company_name_matcher(text, company_list)
-    if len(complst) == 1:
-        company_name = complst[0]
-    elif len(complst) == 0:
-        company_name = "Not Found"
-    else :
-        text = pattern_matcher(text, r'.*\b(?:company|looking for|is an|is a|is hiring).*\n?.*')
-        text = " ".join(text)
-        company = company_name_matcher(text, company_list)
-        company_name = str(company)
+    company_file = open("company_name.txt", encoding="utf-8").read()  # Company Name file
+    company_list =[extra_word_remover(i) for i in eval(company_file)]
+    company_name_pattern = r'.*\b(?:company|looking for|is an|is a|is hiring).*\n?.*'
+    company_name = entity_matcher(text, company_list, company_name_pattern)
     return company_name
 
 #Function to extract title
@@ -97,7 +81,6 @@ def extract_title(text):
     return job_title
 
 #Function to extract Salary
-
 def extract_salary(text):
     pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
     match = re.findall(pattern, text)
