@@ -7,18 +7,30 @@ from config import matching_ratio
 
 # Function to remove punctuation and convert to lower case
 def text_cleaner(text):
-    cleaned = re.sub('[-)(#$%*~:,?_+=@]',' ',text)
+    cleaned = re.sub('[-)(#$%*~:,?_+=@.]',' ',text)
     cleaned = cleaned.lower()
     return cleaned
 
 # Function to remove punctuation and convert to lower case
-def entity_matcher(text, entity_list):
+def entity_matcher(text, entity_list, pattern):
     text = re.sub('[\n\r]',' ', str(text))
     matched_entities = []
+    print(text)
+
     for entity in entity_list:
         if ' '+entity.lower()+' ' in ' '+text+' ':
             matched_entities.append(entity)
-    return matched_entities
+
+    if len(matched_entities) == 1:
+        matched_entity = matched_entities[0]
+    elif len(matched_entities) == 0:
+        matched_entity = "Not Found"
+    else :
+        text = pattern_matcher(text, pattern)
+        text = " ".join(text)
+        ent = company_name_matcher(text, entity_list)
+        matched_entity = str(ent)
+    return matched_entity
 
 # Function to match pattern
 def pattern_matcher(text, pattern):
@@ -80,11 +92,9 @@ def extract_company(text):
 def extract_title(text):
     title_file = open("title.txt")  # Title file
     title_list = [line.strip('\n') for line in title_file.readlines()]
-    job_titles = []
-    for title in title_list:
-        if title.lower() in text.lower():
-            job_titles.append(title)
-    return job_titles
+    title_pattern = r'.*\b(?:looking for|searching for|title|position|hiring|category|need).*\n?.*'
+    job_title = entity_matcher(text, title_list, title_pattern)
+    return job_title
 
 #Function to extract Salary
 
@@ -216,7 +226,7 @@ def extract_job_nature(text):
 def job_desc_extractor(text):
     cleaned_text = text_cleaner(text)
     data={"company":extract_company(cleaned_text),
-        "title":extract_title(text),
+        "title":extract_title(cleaned_text),
          "salary":extract_salary(text)['salary'],
           "currency":extract_salary(text)['currency'],
           "email":extract_email(text),
