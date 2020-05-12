@@ -15,7 +15,9 @@ def text_cleaner(text):
 def pattern_matcher(text, pattern):
     compiled_pattern = re.compile(pattern, flags=re.I)
     match = re.findall(compiled_pattern, text)
-    return match
+    match = " ".join(match)
+    text = re.sub('[\n\r]',' ', str(match))
+    return text
 
 # Function to search strings within text
 def string_searcher(text, string_list):
@@ -35,7 +37,6 @@ def entity_matcher(text, entity_list, pattern):
         matched_entity = "Not Found"
     else :
         text = pattern_matcher(text, pattern)
-        text = " ".join(text)
         ent = string_searcher(text, entity_list)
         matched_entity = str(ent)
     return matched_entity
@@ -80,31 +81,49 @@ def extract_title(text):
     job_title = entity_matcher(text, title_list, title_pattern)
     return job_title
 
+#Function to extract Salary text
+def salary_text(text):
+    text = text.lower()
+    salary_text_pattern = r'\b(?:Salary|Compensation|Allowance).*\n?.*'
+    matched_text = pattern_matcher(text, salary_text_pattern)
+    return matched_text
+
 #Function to extract Salary
 def extract_salary(text):
-    pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
-    match = re.findall(pattern, text)
-    match = re.sub(r"([,\\nr])", "", str(match))
+    matched_text = salary_text(text)
+    salary_pattern = r'(\d+) *(.*) *[-|to] *(\d+) *(.*)'
+    matched_salary = re.findall(salary_pattern, matched_text)
+    if len(matched_salary) != 0 :
+        matched_salary = matched_salary[0]
+        salary =[]
+        unit = 1
+        for s in matched_salary:
+            if s.isdigit():
+                salary.append(int(s))
+            if s.strip() == 'k' or s == 'thousands':
+                unit = 1000
+        salary = [min(salary)*unit, max(salary)*unit]
+    else:
+        digit_and_unit = re.findall(r'(\d+) *([k|thousands])*', matched_text)
+        if len(digit_and_unit) != 0:
+            digit_and_unit = digit_and_unit[0]
+            if digit_and_unit[1].strip() == 'k' or digit_and_unit[1].strip() == 'thousands':
+                salary = int(digit_and_unit[0])*1000
+            else:
+                salary = int(digit_and_unit[0])
+        else:
+            salary = "Negotiable"
+    return salary
 
-    salary_pattern = re.compile(r'\d+\w?')
-    salary = re.findall(salary_pattern, match)
-
+#Function to extract currency
+def extract_currency(text):
     currency_file = open("currency.txt", encoding="utf-8").read()
     currency_list = eval(currency_file)
-
-    currency = []
-    for cur in currency_list:
-        if ' '+cur.lower()+' ' in ' '+match.lower()+' ':
-            currency.append(cur)
-
-    if  len(salary) == 0:
-        salary = "Negotiable"
-    elif len(salary) > 1:
-        salary = {'minimum' : salary[0], 'maximum' : salary[1]}
-    else:
-        salary =  salary
-
-    return {'salary': salary, 'currency' : currency}
+    matched_text = salary_text(text)
+    currency = string_searcher(matched_text, set(currency_list))
+    if len(currency) != 0:
+        currency = currency[0]
+    return str(currency)
 
 
 #Function to extract Email
@@ -210,8 +229,8 @@ def job_desc_extractor(text):
     cleaned_text = text_cleaner(text)
     data={"company":extract_company(cleaned_text),
         "title":extract_title(cleaned_text),
-         "salary":extract_salary(text)['salary'],
-          "currency":extract_salary(text)['currency'],
+         "salary":extract_salary(text),
+          "currency":extract_currency(cleaned_text),
           "email":extract_email(text),
           "url":extract_url(text),
           "vacancy":extract_vacancy(text),
