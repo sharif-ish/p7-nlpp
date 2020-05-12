@@ -235,7 +235,7 @@ def extract_job_nature(text):
 
 def job_desc_extractor(text):
     cleaned_text = text_cleaner(text)
-    data={"company":extract_company(text),
+    data={"company":extract_company(cleaned_text),
         "title":extract_title(text),
          "salary":extract_salary(text),
           "currency":extract_currency(text),
