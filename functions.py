@@ -55,8 +55,9 @@ def extra_word_remover(company):
 def company_name_matcher(text, company_list):
     text = re.sub('[\n\r]',' ', str(text))
     complst = []
+
     for c in company_list:
-        if ' '+extra_word_remover(c)+' ' in ' '+text+' ':
+        if ' '+c.lower()+' ' in ' '+text+' ':
             complst.append(c)
     return complst
 
