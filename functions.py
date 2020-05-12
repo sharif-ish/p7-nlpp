@@ -80,6 +80,19 @@ def extract_title(text):
     job_title = entity_matcher(text, title_list, title_pattern)
     return job_title
 
+def extract_currency(text):
+    currency_file = open("currency.txt", encoding="utf-8").read()
+    currency_list = eval(currency_file)
+    currency_pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
+    #currency=re.findall(currency_pattern,text)
+    currency = entity_matcher(text, currency_list, currency_pattern)
+    if currency=="Not Found":
+        currency="BDT"
+    return currency
+
+
+
+
 #Function to extract Salary
 def extract_salary(text):
     pattern = re.compile(r'\b(?:Salary|Compensation|Allowance).*\n?.*',flags=re.I)
@@ -211,7 +224,7 @@ def job_desc_extractor(text):
     data={"company":extract_company(cleaned_text),
         "title":extract_title(cleaned_text),
          "salary":extract_salary(text)['salary'],
-          "currency":extract_salary(text)['currency'],
+          "currency":extract_currency(text),
           "email":extract_email(text),
           "url":extract_url(text),
           "vacancy":extract_vacancy(text),
