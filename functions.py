@@ -81,28 +81,30 @@ def extract_title(text):
     job_title = entity_matcher(text, title_list, title_pattern)
     return job_title
 
-#Function to extract Salary text
+# Function to extract Salary text
 def salary_text(text):
+    text = re.sub('[)(#$%*~:,?_+=@.]', '', text)
     text = text.lower()
     salary_text_pattern = r'\b(?:Salary|Compensation|Allowance).*\n?.*'
     matched_text = pattern_matcher(text, salary_text_pattern)
     return matched_text
 
-#Function to extract Salary
-def extract_salary(text):
+# Function to extract Salary
+def salary_extractor(text):
     matched_text = salary_text(text)
     salary_pattern = r'(\d+) *(.*) *[-|to] *(\d+) *(.*)'
     matched_salary = re.findall(salary_pattern, matched_text)
     if len(matched_salary) != 0 :
         matched_salary = matched_salary[0]
-        salary =[]
+        digits =[]
         unit = 1
         for s in matched_salary:
             if s.isdigit():
-                salary.append(int(s))
+                digits.append(int(s))
             if s.strip() == 'k' or s == 'thousands':
                 unit = 1000
-        salary = [min(salary)*unit, max(salary)*unit]
+
+        salary = {'min': min(digits)*unit, 'max': max(digits)*unit}
     else:
         digit_and_unit = re.findall(r'(\d+) *([k|thousands])*', matched_text)
         if len(digit_and_unit) != 0:
@@ -114,6 +116,34 @@ def extract_salary(text):
         else:
             salary = "Negotiable"
     return salary
+
+# Function to extract salary
+def extract_salary(text):
+    salary = salary_extractor(text)
+    if not isinstance(salary, dict):
+        salary = salary
+    else:
+        salary = ""
+    return salary
+
+# Function to extract minimum salary
+def extract_minimum_salary(text):
+    salary = salary_extractor(text)
+    if isinstance(salary, dict):
+        salary_min = salary['min']
+    else:
+        salary_min = ""
+    return salary_min
+
+# Function to extract maximum salary
+def extract_maximum_salary(text):
+    salary = salary_extractor(text)
+    if isinstance(salary, dict):
+        salary_max = salary['max']
+    else:
+        salary_max = ""
+    return salary_max
+
 
 # Function to extract currency
 def extract_currency(text):
@@ -215,7 +245,6 @@ def extract_qualification(text):
 
     return {'degree':degree, 'major':major}
 
-
 #Function to extract the job nature
 def extract_job_nature(text):
     job_type=['internship','contractual','full-time', 'permanent']
@@ -233,7 +262,9 @@ def job_desc_extractor(text):
     cleaned_text = text_cleaner(text)
     data={"company":extract_company(cleaned_text),
         "title":extract_title(cleaned_text),
-         "salary":extract_salary(cleaned_text),
+         "salary":extract_salary(text),
+         "salary_min":extract_minimum_salary(text),
+         "salary_max":extract_maximum_salary(text),
           "currency":extract_currency(cleaned_text),
           "email":extract_email(text),
           "url":extract_url(text),
