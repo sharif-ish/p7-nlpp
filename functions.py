@@ -38,7 +38,7 @@ def entity_matcher(text, entity_list, pattern):
     else :
         text = pattern_matcher(text, pattern)
         ent = string_searcher(text, entity_list)
-        matched_entity = str(ent)
+        matched_entity = ", ".join(ent)
     return matched_entity
 
 # Returns a list, containing longest matched substrings
