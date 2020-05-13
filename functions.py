@@ -240,7 +240,7 @@ def extract_qualification(text):
         if ' '+maj.lower()+' ' in ' '+text+' ':
             major.append(maj)
 
-    return {'degree':degree, 'major':major}
+    return f'{", ".join(degree)} in {", ".join(major)}'
 
 #Function to extract the job nature
 def extract_job_nature(text):
@@ -270,7 +270,7 @@ def job_desc_extractor(text):
           "experience":extract_experience(text),
           "deadline":extract_deadline(text),
           "location":extract_location(text),
-          "qualification":extract_qualification(text),
+          "qualification":extract_qualification(cleaned_text),
           "job_nature":extract_job_nature(text)
           }
     return data
