@@ -134,7 +134,8 @@ def extract_email(text):
 
 #Function to extract Urls
 def extract_url(text):
-    return URLExtract().find_urls(text)
+    url = URLExtract().find_urls(text)
+    return ", ".join(url)
 
 #Function to extract the vacancy
 def extract_vacancy(text):
