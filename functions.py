@@ -115,7 +115,7 @@ def extract_salary(text):
             salary = "Negotiable"
     return salary
 
-#Function to extract currency
+# Function to extract currency
 def extract_currency(text):
     currency_file = open("currency.txt", encoding="utf-8").read()
     currency_list = eval(currency_file)
@@ -123,7 +123,9 @@ def extract_currency(text):
     currency = string_searcher(matched_text, set(currency_list))
     if len(currency) != 0:
         currency = currency[0]
-    return str(currency)
+    else:
+        currency = "Not Found"
+    return currency
 
 
 #Function to extract Email
