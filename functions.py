@@ -216,13 +216,10 @@ def extract_deadline(text):
 #Function to extract location
 
 def extract_location(text):
-    location=set()
     location_file = open("location.txt", encoding="utf-8").read()
     location_list = eval(location_file)
-
-    pattern = re.compile(r"(?=(\b" + '\\b|\\b'.join(location_list) + r"\b))", flags=re.I)
-    location = re.findall(pattern, text)
-
+    location_pattern = r"(?=(\b" + '\\b|\\b'.join(location_list) + r"\b))"
+    location = pattern_matcher(text, location_pattern)
     return location
 
 # Function to extract the qualification
