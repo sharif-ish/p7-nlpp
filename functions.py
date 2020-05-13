@@ -188,9 +188,11 @@ def extract_skill(text):
 
 #Function for extracting experience
 def extract_experience(text):
-    experience_pattern=r'(?:.*experience.*(?:year|month)|.*(?:year|month).*experience).*\n?.*'
+    experience_pattern=r'(?:.*experience.*\n?.*(?:year|month)|.*(?:year|month).*\n?.*experience).*\n?.*'
     match = pattern_matcher(text, experience_pattern)
-    experience=re.findall(r'\b\d+'," ".join(match))
+    print(match)
+    sub_newline = re.sub(r'\\n', ' ', " ".join(match))
+    experience=re.findall(r'\b\d+'," ".join(sub_newline))
     if len(experience)==0:
         return ''
     else:
@@ -207,7 +209,7 @@ def extract_deadline(text):
     for mat in matches:
         deadline.append(mat)
     if len(deadline)==0:
-        return deadline
+        return ''
     else:
         return deadline[0].strftime("%x")
     return deadline
