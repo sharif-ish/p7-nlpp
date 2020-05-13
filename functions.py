@@ -146,11 +146,8 @@ def extract_vacancy(text):
 
 #Function for extracting skills
 def extract_skill(text):
-    skill_list=[]
-    for skill in custom_skills:
-        if skill.lower() in text.lower():
-            skill_list.append(skill.title())
-    return skill_list
+    skills = string_searcher(text, custom_skills)
+    return ", ".join(skills)
 
 #Function for extracting experience
 def extract_experience(text):
@@ -229,12 +226,12 @@ def job_desc_extractor(text):
     cleaned_text = text_cleaner(text)
     data={"company":extract_company(cleaned_text),
         "title":extract_title(cleaned_text),
-         "salary":extract_salary(text),
+         "salary":extract_salary(cleaned_text),
           "currency":extract_currency(cleaned_text),
           "email":extract_email(text),
           "url":extract_url(text),
           "vacancy":extract_vacancy(text),
-          "skills":extract_skill(text),
+          "skills":extract_skill(cleaned_text),
           "experience":extract_experience(text),
           "deadline":extract_deadline(text),
           "location":extract_location(text),
