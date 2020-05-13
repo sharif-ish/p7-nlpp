@@ -190,7 +190,6 @@ def extract_skill(text):
 def extract_experience(text):
     experience_pattern=r'(?:.*experience.*\n?.*(?:year|month)|.*(?:year|month).*\n?.*experience).*\n?.*'
     match = pattern_matcher(text, experience_pattern)
-    print(match)
     sub_newline = re.sub(r'\\n', ' ', " ".join(match))
     experience=re.findall(r'\b\d+'," ".join(sub_newline))
     if len(experience)==0:
