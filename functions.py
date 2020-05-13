@@ -190,9 +190,9 @@ def extract_skill(text):
 def extract_experience(text):
     experience_pattern=r'(?:.*experience.*(?:year|month)|.*(?:year|month).*experience).*\n?.*'
     match = pattern_matcher(text, experience_pattern)
-    experience=re.findall(r'\b\d+',str(match))
+    experience=re.findall(r'\b\d+'," ".join(match))
     if len(experience)==0:
-        return experience
+        return ''
     else:
         return int(experience[0])
 
