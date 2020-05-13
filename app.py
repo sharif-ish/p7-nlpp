@@ -21,6 +21,8 @@ def after_extract():
                            Email=extracted_data['email'],
                            Urls=extracted_data['url'],
                            Salary=extracted_data['salary'],
+                           Salary_min=extracted_data['salary_min'],
+                           Salary_max=extracted_data['salary_max'],
                            Currency=extracted_data['currency'],
                            Vacancy=extracted_data['vacancy'],
                            Skills=extracted_data['skills'],
