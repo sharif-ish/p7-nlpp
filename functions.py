@@ -139,12 +139,15 @@ def extract_url(text):
     url = URLExtract().find_urls(text)
     return ", ".join(url)
 
-#Function to extract the vacancy
+# Function to extract the vacancy
 def extract_vacancy(text):
-    pattern=re.compile(r'.*vacanc.*\n?.*',flags=re.I)
-    match=re.findall(pattern,text)
-    sub_newline=re.sub(r'\\n',' ',str(match))
-    vacancy=re.findall(r'\d+',str(sub_newline))
+    vacancy_pattern=r'.*vacanc.*\n?.*'
+    match = pattern_matcher(text, vacancy_pattern)
+    vacancy = re.findall(r'\d+'," ".join(match))
+    if len(vacancy) ==1 :
+        vacancy = int(vacancy[0])
+    else :
+        vacancy = 0
     return vacancy
 
 
@@ -234,7 +237,7 @@ def job_desc_extractor(text):
           "currency":extract_currency(cleaned_text),
           "email":extract_email(text),
           "url":extract_url(text),
-          "vacancy":extract_vacancy(text),
+          "vacancy":extract_vacancy(cleaned_text),
           "skills":extract_skill(cleaned_text),
           "experience":extract_experience(text),
           "deadline":extract_deadline(text),
