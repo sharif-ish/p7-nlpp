@@ -244,16 +244,13 @@ def extract_qualification(text):
 
 #Function to extract the job nature
 def extract_job_nature(text):
-    job_type=['internship','contractual','full-time', 'permanent']
-    job_nature=[]
-    for job in job_type:
-        if job in text.lower():
-            job_nature.append(job.title())
-    if len(job_nature)>0:
-        return job_nature
+    job_nature_list = ['Part time', 'Full time']
+    extracted_job_nature = set(string_searcher(text, job_nature_list))
+    if len(extracted_job_nature) == 0:
+        job_nature = "Full time"
     else:
-        return "Full time"
-
+        job_nature =   ", ".join(extracted_job_nature)
+    return job_nature
 
 def job_desc_extractor(text):
     cleaned_text = text_cleaner(text)
@@ -271,6 +268,6 @@ def job_desc_extractor(text):
           "deadline":extract_deadline(text),
           "location":extract_location(text),
           "qualification":extract_qualification(cleaned_text),
-          "job_nature":extract_job_nature(text)
+          "job_nature":extract_job_nature(cleaned_text)
           }
     return data
