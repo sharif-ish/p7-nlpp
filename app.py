@@ -31,7 +31,7 @@ def after_extract():
                            JobNature=extracted_data['job_nature'])
 
 @app.route('/api', methods= METHOD)
-def JDParser_api():
+def api():
     extracted_info = job_desc_extractor(request.json['desc'])
     return jsonify({'extracted info': extracted_info})
 
