@@ -4,6 +4,12 @@ from from_external_api import custom_skills
 from urlextract import URLExtract
 from difflib import SequenceMatcher
 from config import matching_ratio
+from constant_data import *
+
+# Function to replace new line with space
+def new_line_remover(text):
+    text = re.sub('[\n\r]', ' ', str(text))
+    return text
 
 # Function to remove punctuation and convert to lower case
 def text_cleaner(text):
@@ -242,7 +248,8 @@ def extract_qualification(text):
 
     return f'{", ".join(degree)} in {", ".join(major)}'
 
-#Function to extract the job nature
+
+# Function to extract the job nature
 def extract_job_nature(text):
     job_nature_list = ['Part time', 'Full time']
     extracted_job_nature = set(string_searcher(text, job_nature_list))
@@ -251,6 +258,25 @@ def extract_job_nature(text):
     else:
         job_nature =   ", ".join(extracted_job_nature)
     return job_nature
+
+# Function to search a specific string from list within the text
+def specific_string_searcher(text, to_be_searched, to_be_returned):
+    text = new_line_remover(text)
+    string = None
+    for item in to_be_searched:
+        if ' ' + item.lower() + ' ' in ' ' + text + ' ':
+            string = item
+    if string == None:
+        string = to_be_returned
+    return string
+
+# Function to extract the job type
+def extract_job_site(text):
+    default_job_site = 'On-site'
+    job_site = specific_string_searcher(text, JOB_SITES, default_job_site)
+    if job_site != default_job_site:
+        job_site = 'Remote'
+    return job_site
 
 def job_desc_extractor(text):
     cleaned_text = text_cleaner(text)
@@ -268,6 +294,7 @@ def job_desc_extractor(text):
           "deadline":extract_deadline(text),
           "location":extract_location(text),
           "qualification":extract_qualification(cleaned_text),
-          "job_nature":extract_job_nature(cleaned_text)
+          "job_nature":extract_job_nature(cleaned_text),
+          "job_site":extract_job_site(cleaned_text)
           }
     return data

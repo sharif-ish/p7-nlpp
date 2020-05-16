@@ -30,7 +30,9 @@ def after_extract():
                            Deadline=extracted_data['deadline'],
                            Location=extracted_data['location'],
                            Qualification=extracted_data['qualification'],
-                           JobNature=extracted_data['job_nature'])
+                           JobNature=extracted_data['job_nature'],
+                           JobSite=extracted_data['job_site']
+                           )
 
 @app.route('/api', methods= METHOD)
 def api():
