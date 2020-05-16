@@ -251,6 +251,7 @@ def extract_qualification(text):
 
 # Function to search a specific string from list within the text
 def binary_entity_searcher(text, str_list, default, other):
+    str_list = [text_cleaner(i) for i in str_list]
     text = new_line_remover(text)
     string = string_searcher(text, str_list)
     if len(string) == 0:
@@ -261,8 +262,8 @@ def binary_entity_searcher(text, str_list, default, other):
 
 # Function to extract the job nature
 def extract_job_nature(text):
-    default_job_nature = 'Full time'
-    other_job_nature = 'Part time'
+    default_job_nature = 'Full-time'
+    other_job_nature = 'Part-time'
     job_nature = binary_entity_searcher(text, JOB_NATURES, default_job_nature, other_job_nature)
     return job_nature
 
