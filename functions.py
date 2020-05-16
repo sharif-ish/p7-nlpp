@@ -222,6 +222,16 @@ def extract_location(text):
     location = pattern_matcher(text, location_pattern)
     return location
 
+#Function to extract address
+
+def extract_address(text):
+    address_file = open("location.txt", encoding="utf-8").read()
+    address_list = eval(address_file)
+    address_pattern = r"(?=(\b" + '\\b|\\b'.join(address_list) + r"\b))"
+    address = pattern_matcher(text, address_pattern)
+    return address
+
+
 # Function to extract the qualification
 def extract_qualification(text):
     text = re.sub('[.|\\n]', '', str(text))
@@ -249,6 +259,7 @@ def extract_job_nature(text):
     if len(extracted_job_nature) == 0:
         job_nature = "Full time"
     else:
+
         job_nature =   ", ".join(extracted_job_nature)
     return job_nature
 
@@ -267,6 +278,7 @@ def job_desc_extractor(text):
           "experience":extract_experience(text),
           "deadline":extract_deadline(text),
           "location":extract_location(text),
+          "address":extract_address(text),
           "qualification":extract_qualification(cleaned_text),
           "job_nature":extract_job_nature(cleaned_text)
           }

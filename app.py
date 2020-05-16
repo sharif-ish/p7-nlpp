@@ -25,6 +25,7 @@ def after_extract():
                            Salary_max=extracted_data['salary_max'],
                            Currency=extracted_data['currency'],
                            Vacancy=extracted_data['vacancy'],
+                           Address=extracted_data['address'],
                            Skills=extracted_data['skills'],
                            Experience=extracted_data['experience'],
                            Deadline=extracted_data['deadline'],
