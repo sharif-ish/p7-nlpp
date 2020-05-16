@@ -249,16 +249,6 @@ def extract_qualification(text):
     return f'{", ".join(degree)} in {", ".join(major)}'
 
 
-# Function to extract the job nature
-def extract_job_nature(text):
-    job_nature_list = ['Part time', 'Full time']
-    extracted_job_nature = set(string_searcher(text, job_nature_list))
-    if len(extracted_job_nature) == 0:
-        job_nature = "Full time"
-    else:
-        job_nature =   ", ".join(extracted_job_nature)
-    return job_nature
-
 # Function to search a specific string from list within the text
 def binary_entity_searcher(text, str_list, default, other):
     text = new_line_remover(text)
@@ -268,6 +258,13 @@ def binary_entity_searcher(text, str_list, default, other):
     else:
         string = other
     return string
+
+# Function to extract the job nature
+def extract_job_nature(text):
+    default_job_nature = 'Full time'
+    other_job_nature = 'Part time'
+    job_nature = binary_entity_searcher(text, JOB_NATURES, default_job_nature, other_job_nature)
+    return job_nature
 
 # Function to extract the job type
 def extract_job_site(text):
