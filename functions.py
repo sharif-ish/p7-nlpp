@@ -260,23 +260,28 @@ def extract_job_nature(text):
     return job_nature
 
 # Function to search a specific string from list within the text
-def specific_string_searcher(text, to_be_searched, to_be_returned):
+def binary_entity_searcher(text, str_list, default, other):
     text = new_line_remover(text)
-    string = None
-    for item in to_be_searched:
-        if ' ' + item.lower() + ' ' in ' ' + text + ' ':
-            string = item
-    if string == None:
-        string = to_be_returned
+    string = string_searcher(text, str_list)
+    if len(string) == 0:
+        string = default
+    else:
+        string = other
     return string
 
 # Function to extract the job type
 def extract_job_site(text):
     default_job_site = 'On-site'
-    job_site = specific_string_searcher(text, JOB_SITES, default_job_site)
-    if job_site != default_job_site:
-        job_site = 'Remote'
+    other_job_site = 'Remote'
+    job_site = binary_entity_searcher(text, JOB_SITES, default_job_site, other_job_site)
     return job_site
+
+# Function to extract the job type
+def extract_job_type(text):
+    default_job_type = 'Permanent'
+    other_job_type = 'Contractual'
+    job_type = binary_entity_searcher(text, JOB_TYPES, default_job_type, other_job_type)
+    return job_type
 
 def job_desc_extractor(text):
     cleaned_text = text_cleaner(text)
@@ -295,6 +300,7 @@ def job_desc_extractor(text):
           "location":extract_location(text),
           "qualification":extract_qualification(cleaned_text),
           "job_nature":extract_job_nature(cleaned_text),
-          "job_site":extract_job_site(cleaned_text)
+          "job_site":extract_job_site(cleaned_text),
+          "job_type":extract_job_type(cleaned_text)
           }
     return data
