@@ -219,7 +219,7 @@ def extract_deadline(text):
         return deadline[0].strftime("%x")
     return deadline
 
-#Function to extract location
+# Function to extract location
 
 def extract_location(text):
     location_file = open("location.txt", encoding="utf-8").read()
@@ -228,8 +228,7 @@ def extract_location(text):
     location = pattern_matcher(text, location_pattern)
     return location
 
-#Function to extract address
-
+# Function to extract address
 def extract_address(text):
     address_file = open("location.txt", encoding="utf-8").read()
     address_list = eval(address_file)
@@ -237,6 +236,9 @@ def extract_address(text):
     address = pattern_matcher(text, address_pattern)
     return address
 
+# Function to extract area
+def extract_job_area(text):
+    return extract_location(text)
 
 # Function to extract the qualification
 def extract_qualification(text):
@@ -321,6 +323,7 @@ def job_desc_extractor(text):
           "job_nature":extract_job_nature(cleaned_text),
           "job_site":extract_job_site(cleaned_text),
           "job_type":extract_job_type(cleaned_text),
-          "job_gender":extract_job_gender(cleaned_text)
+          "job_gender":extract_job_gender(cleaned_text),
+          "job_area":extract_job_area(cleaned_text)
           }
     return data
