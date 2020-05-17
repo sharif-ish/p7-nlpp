@@ -194,14 +194,14 @@ def extract_skill(text):
 
 #Function for extracting experience
 def extract_experience(text):
-    pattern=re.compile(r'.*Experience.*\n?.*',flags=re.I)
-    match=re.findall(pattern,text)
-    sub_newline=re.sub(r'\\n',' ',str(match))
-    experience=re.findall(r'\d ?-?t?o?\+? ?\d? ?\S+',str(sub_newline))
-    if len(experience)>0:
-        return experience[0]
+    experience_pattern=r'(?:.*experience.*\n?.*(?:year|month)|.*(?:year|month).*\n?.*experience).*\n?.*'
+    match = pattern_matcher(text, experience_pattern)
+    sub_newline = re.sub(r'\\n', ' ', " ".join(match))
+    experience=re.findall(r'\b\d+'," ".join(sub_newline))
+    if len(experience)==0:
+        return ''
     else:
-        return experience
+        return int(experience[0])
 
 
 # Function for extracting deadline
@@ -214,7 +214,7 @@ def extract_deadline(text):
     for mat in matches:
         deadline.append(mat)
     if len(deadline)==0:
-        return deadline
+        return ''
     else:
         return deadline[0].strftime("%x")
     return deadline
@@ -227,6 +227,16 @@ def extract_location(text):
     location_pattern = r"(?=(\b" + '\\b|\\b'.join(location_list) + r"\b))"
     location = pattern_matcher(text, location_pattern)
     return location
+
+#Function to extract address
+
+def extract_address(text):
+    address_file = open("location.txt", encoding="utf-8").read()
+    address_list = eval(address_file)
+    address_pattern = r"(?=(\b" + '\\b|\\b'.join(address_list) + r"\b))"
+    address = pattern_matcher(text, address_pattern)
+    return address
+
 
 # Function to extract the qualification
 def extract_qualification(text):
@@ -296,6 +306,7 @@ def job_desc_extractor(text):
           "experience":extract_experience(text),
           "deadline":extract_deadline(text),
           "location":extract_location(text),
+          "address":extract_address(text),
           "qualification":extract_qualification(cleaned_text),
           "job_nature":extract_job_nature(cleaned_text),
           "job_site":extract_job_site(cleaned_text),
