@@ -230,11 +230,7 @@ def extract_location(text):
 
 # Function to extract address
 def extract_address(text):
-    address_file = open("location.txt", encoding="utf-8").read()
-    address_list = eval(address_file)
-    address_pattern = r"(?=(\b" + '\\b|\\b'.join(address_list) + r"\b))"
-    address = pattern_matcher(text, address_pattern)
-    return address
+    return extract_location(text)
 
 # Function to extract area
 def extract_job_area(text):
