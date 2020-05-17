@@ -291,6 +291,16 @@ def extract_job_type(text):
     job_type = binary_entity_searcher(text, JOB_TYPES, default_job_type, other_job_type)
     return job_type
 
+# Function to extract the job gender
+def extract_job_gender(text):
+    text = new_line_remover(text)
+    job_gender = string_searcher(text, JOB_GENDERS)
+    if len(set(job_gender)) != 1:
+        job_gender = 'Both'
+    else:
+        job_gender = job_gender[0]
+    return job_gender
+
 def job_desc_extractor(text):
     cleaned_text = text_cleaner(text)
     data={"company":extract_company(cleaned_text),
@@ -310,6 +320,7 @@ def job_desc_extractor(text):
           "qualification":extract_qualification(cleaned_text),
           "job_nature":extract_job_nature(cleaned_text),
           "job_site":extract_job_site(cleaned_text),
-          "job_type":extract_job_type(cleaned_text)
+          "job_type":extract_job_type(cleaned_text),
+          "job_gender":extract_job_gender(cleaned_text)
           }
     return data
