@@ -236,6 +236,10 @@ def extract_address(text):
 def extract_job_area(text):
     return extract_location(text)
 
+# Function to extract city
+def extract_job_city(text):
+    return extract_location(text)
+
 # Function to extract the qualification
 def extract_qualification(text):
     text = re.sub('[.|\\n]', '', str(text))
@@ -320,6 +324,7 @@ def job_desc_extractor(text):
           "job_site":extract_job_site(cleaned_text),
           "job_type":extract_job_type(cleaned_text),
           "job_gender":extract_job_gender(cleaned_text),
-          "job_area":extract_job_area(cleaned_text)
+          "job_area":extract_job_area(cleaned_text),
+          "job_city":extract_job_city(cleaned_text)
           }
     return data

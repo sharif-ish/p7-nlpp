@@ -35,7 +35,8 @@ def after_extract():
                            JobSite=extracted_data['job_site'],
                            Jobtype=extracted_data['job_type'],
                            JobGender=extracted_data['job_gender'],
-                           JobArea=extracted_data['job_area']
+                           JobArea=extracted_data['job_area'],
+                           JobCity=extracted_data['job_city']
                            )
 
 @app.route('/api', methods= METHOD)
