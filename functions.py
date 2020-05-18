@@ -237,6 +237,13 @@ def extract_address(text):
     address = pattern_matcher(text, address_pattern)
     return address
 
+#Function to extract education
+def extract_education(text):
+    text=re.sub("[\.]","",text)
+    education_text_pattern = re.compile(r'.*\b(?:Bachelor|University|Graduation|Graduates?|Degree|Diploma|Masters|Polytechnic|B\s*sc|M\s*sc).*',flags=re.I)
+    match=re.findall(education_text_pattern,text)
+    return ' .'.join(match)
+
 
 # Function to extract the qualification
 def extract_qualification(text):
@@ -317,6 +324,7 @@ def job_desc_extractor(text):
           "deadline":extract_deadline(text),
           "location":extract_location(text),
           "address":extract_address(text),
+          "education":extract_education(text),
           "qualification":extract_qualification(cleaned_text),
           "job_nature":extract_job_nature(cleaned_text),
           "job_site":extract_job_site(cleaned_text),

@@ -30,6 +30,7 @@ def after_extract():
                            Experience=extracted_data['experience'],
                            Deadline=extracted_data['deadline'],
                            Location=extracted_data['location'],
+                           Education=extracted_data['education'],
                            Qualification=extracted_data['qualification'],
                            JobNature=extracted_data['job_nature'],
                            JobSite=extracted_data['job_site'],
