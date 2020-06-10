@@ -15,3 +15,6 @@ SKILL_LIST_API = MAIN_SITE+'skill/list/'
 # Company API
 COMPANY_API = MAIN_SITE+'company/list'
 
+# Job List API
+JOB_LIST_API = MAIN_SITE+'job/list/'
+
